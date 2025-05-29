@@ -1,3 +1,9 @@
+"The user (system architect) is creating a template-driven, data-separated publishing framework using Quarto. The framework consists of pairs of:
+a) Data Schemas (JSON/YAML): Defining the required content structure for different document types.
+b) Quarto Presentation Templates (.qmd): Defining the layout, style, and rendering logic for those document types, designed to work with data adhering to the corresponding schema.
+The goal is to enable non-expert end-users to supply their content in a structured way (fitting the schema) and then use Quarto with the provided presentation template to reliably generate consistent, high-quality, multi-format outputs (like websites and PDFs). The design explicitly aims for clarity in data requirements to potentially facilitate future AI-powered assistance for the end-users during the content input phase."
+
+
 ```mermaid
 graph TD
     subgraph "1. Content & Data Foundation"
