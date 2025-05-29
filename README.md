@@ -1,16 +1,47 @@
 ```mermaid
 graph TD
-    A["Data Source (e.g., JSON, YAML, .qmd files with data, Databases)"] --> B{"Quarto Engine / Processing"};
-    
-    B --> C["Quarto HTML (Websites, Single Pages)"];
-    B --> D["Quarto PDF (Documents, Reports)"];
-    B --> E["Quarto Interactive Documents (Shiny, Observable JS)"];
-    B --> F["Quarto Dashboards"];
-    B --> G["Quarto Articles (Academic, Technical)"];
-    B --> H["Quarto Blog (Posts, Listings)"];
-    B --> I["Quarto Presentations"];
-    B --> J["Quarto Books"];
-    B --> K["Quarto E-books (e.g., ePub)"];
+    subgraph "1. Content & Data Foundation"
+        A["Data Source(s) (e.g., JSON, YAML, Databases, APIs)"]
+        B[".qmd File(s) (Primary Authoring: Markdown, Code Chunks, YAML Front Matter for Base Config & Data Pointers)"]
+        A -->|Can be loaded/referenced by| B
+    end
+
+    subgraph "2. Quarto Processing Engine & Configuration Layer"
+        C{"Quarto Engine"}
+        B --> C
+
+        C -- "Applies Output-Format Specific Configurations & Templates" --> D{"Format-Specific Processing & Templating Layer"}
+        
+        D_HTML_Config["HTML-Specific Config (Themes, CSS, JS, HTML Templates)"]
+        D_PDF_Config["PDF-Specific Config (LaTeX/Engine choice, Document Class, Fonts, PDF Templates)"]
+        D_Dashboard_Config["Dashboard-Specific Layouts & Components"]
+        D_Other_Config["Configurations for Other Formats..."]
+
+        D_HTML_Config -.-> D
+        D_PDF_Config -.-> D
+        D_Dashboard_Config -.-> D
+        D_Other_Config -.-> D
+    end
+
+    subgraph "3. Generated Outputs"
+        Output_HTML["Quarto HTML (Websites, Single Pages, Articles)"]
+        Output_PDF["Quarto PDF (Documents, Reports, Articles)"]
+        Output_Interactive["Quarto Interactive Documents (Shiny, Observable JS)"]
+        Output_Dashboard["Quarto Dashboards"]
+        Output_Blog["Quarto Blog (Posts, Listings)"]
+        Output_Presentation["Quarto Presentations"]
+        Output_Book["Quarto Books"]
+        Output_Other["Other Formats (e.g., ePub, Word)"]
+
+        D -- "Renders as HTML" --> Output_HTML
+        D -- "Renders as PDF" --> Output_PDF
+        D -- "Renders as Interactive HTML" --> Output_Interactive
+        D -- "Renders for Dashboard Layout" --> Output_Dashboard
+        D -- "Renders Blog Structure" --> Output_Blog
+        D -- "Renders Presentation Slides" --> Output_Presentation
+        D -- "Renders Book Structure" --> Output_Book
+        D -- "Renders to Other Formats" --> Output_Other
+    end
 ``` 
 
 # Ideation Process for Academic Research in Supply Chain
