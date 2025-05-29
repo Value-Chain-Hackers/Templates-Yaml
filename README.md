@@ -1,33 +1,59 @@
 ```mermaid
 graph TD
-    subgraph "1. Design & Definition Phase (Core System in Code)"
-        A1["User Defines Data Structure Templates IN CODE (e.g., Python Classes, R Objects/Lists)"]
-        A2["User Designs .qmd Document Templates (Interprets instances of Code-Defined Data Structures)"]
-        A1 -->|Dictates expected input for| A2
-    end
-
-    subgraph "2. Data Instantiation (in Code - AI is OPTIONAL)"
-        B1_Populate["User (or optional AI) Populates an INSTANCE of a Code-Defined Data Structure (in Python/R code)"]
-        A1 -->|Is instantiated & populated as| B1_Populate
+    subgraph "Phase 1: Template Package Creation (by Developer 'You')"
+        Developer["Developer 'You'"]
         
-        DataInstance["Populated Data Object Instance (in memory)"]
-        B1_Populate --> DataInstance
+        subgraph "Define Data Structure"
+            direction LR
+            PydanticOrCode["Optional: Define Schema Programmatically (e.g., Pydantic, other code)"]
+            A1["Formal JSON/YAML Data Schema (Defines content fields & structure for a template type)"]
+            PydanticOrCode -->|Generates/Defines| A1
+        end
+
+        A2["Design .qmd Document Template (Mapped to Data Schema A1)"]
+        
+        TemplatePackage["Template Package (e.g., for 'Research Article'):\n- .qmd Template (A2)\n- Data Schema (A1)"]
+
+        Developer --> PydanticOrCode
+        Developer --> A2
+        A1 -->|Is part of| TemplatePackage
+        A2 -->|Is part of| TemplatePackage
     end
 
-    subgraph "3. Programmatic Document Generation (AI-Independent Core Process)"
+    subgraph "Phase 2: End-User Content Creation (AI is Optional Future Assistant)"
+        EndUser["End-User (Student, Researcher, etc.)"]
+        
+        EndUser -- "Selects & Uses" --> TemplatePackage
+
+        DataInstance["End-User Creates/Populates a JSON/YAML Data File (Conforming to Schema A1 from the package)"]
+        TemplatePackage -->|Provides Schema for| DataInstance
+        EndUser --> DataInstance
+        
+        subgraph "Future AI Assistance for End-User (Optional)"
+            direction LR
+            AI_Prompt["End-User Prompts AI (e.g., 'Help fill data for this [Template Type] based on my notes, adhering to its schema')"]
+            AI_Process["AI Model Assists End-User (using Schema A1)"]
+            AI_Output["AI Suggests/Outputs Data (conforming to Schema A1)"]
+            TemplatePackage -->|Provides Schema to| AI_Process
+            AI_Prompt --> AI_Process
+            AI_Process --> AI_Output
+            AI_Output -->|Helps End-User populate| DataInstance
+        end
+    end
+
+    subgraph "Phase 3: Document Generation (Core Quarto Process - AI Independent for Rendering)"
         direction LR
-        ControllerScript["Controller Script (e.g., Python, R)"]
-        QmdTemplate["Original .qmd Document Template (from A2)"]
+        QuartoEngine["Quarto Engine"]
         
-        RenderParams["Data for Quarto (e.g., Serialized JSON/YAML or direct object reference)"]
-        FinalDoc["Final Document (Website, Article, PDF, etc.)"]
+        QmdToRender["User applies their .qmd Template (A2 from package)"]
+        DataToUse["User applies their Populated JSON/YAML Data File (DataInstance)"]
+        
+        RenderedOutput["Final Consistent Document (Website, Article, PDF, etc.)"]
 
-        DataInstance -->|Is processed by| ControllerScript
-        QmdTemplate -->|Is targeted by| ControllerScript
-        
-        ControllerScript -- "Prepares data & Invokes Quarto with .qmd and data" --> RenderParams
-        RenderParams -- "Used by Quarto Engine with" --> QmdTemplate
-        QmdTemplate -- "Processed by Quarto with data" --> FinalDoc
+        TemplatePackage -->|Provides .qmd to| QmdToRender
+        DataInstance --> DataToUse
+
+        QuartoEngine -- "Renders .qmd (QmdToRender) using Data (DataToUse)" --> RenderedOutput
     end
 ``` 
 
