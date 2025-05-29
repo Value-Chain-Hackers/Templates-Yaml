@@ -1,41 +1,34 @@
 ```mermaid
 graph TD
-    subgraph "1. Design & Setup Phase"
-        A["User: Designs Ideation Template (.qmd)"] -- "Defines structure & placeholders" --> A
-        B["User: Defines AI Data Structure (JSON/YAML Schema for AI Output)"] -- "Specifies expected AI content fields" --> B
+    subgraph "1. Design & Definition Phase (Core System in Code)"
+        A1["User Defines Data Structure Templates IN CODE (e.g., Python Classes, R Objects/Lists)"]
+        A2["User Designs .qmd Document Templates (Interprets instances of Code-Defined Data Structures)"]
+        A1 -->|Dictates expected input for| A2
     end
 
-    subgraph "2. AI Content Generation"
-        C["User/Script: Prompts AI Model"] -- "Provides: Task, Context, Base Template (optional), and Desired Schema (B)" --> C
-        D["AI Model: Processes Prompt & Generates Content"]
-        E["AI Output: Structured Data - JSON/YAML"] -- "Conforms to Schema B" --> E
-        C --> D
-        D --> E
+    subgraph "2. Data Instantiation (in Code - AI is OPTIONAL)"
+        B1_Populate["User (or optional AI) Populates an INSTANCE of a Code-Defined Data Structure (in Python/R code)"]
+        A1 -->|Is instantiated & populated as| B1_Populate
+        
+        DataInstance["Populated Data Object Instance (in memory)"]
+        B1_Populate --> DataInstance
     end
 
-    subgraph "3. Document Assembly & Processing"
+    subgraph "3. Programmatic Document Generation (AI-Independent Core Process)"
         direction LR
-        F["Automated Script (e.g., Python)"]
-        G_Template["Base .qmd Ideation Template from A"]
-        H_AIData["AI's JSON/YAML Output from E"]
-        I_PopulatedQMD["Populated .qmd File"]
+        ControllerScript["Controller Script (e.g., Python, R)"]
+        QmdTemplate["Original .qmd Document Template (from A2)"]
+        
+        RenderParams["Data for Quarto (e.g., Serialized JSON/YAML or direct object reference)"]
+        FinalDoc["Final Document (Website, Article, PDF, etc.)"]
 
-        G_Template -->|Reads| F
-        H_AIData -->|Reads| F
-        F -- "Injects AI data into a copy of Base Template" --> I_PopulatedQMD
+        DataInstance -->|Is processed by| ControllerScript
+        QmdTemplate -->|Is targeted by| ControllerScript
+        
+        ControllerScript -- "Prepares data & Invokes Quarto with .qmd and data" --> RenderParams
+        RenderParams -- "Used by Quarto Engine with" --> QmdTemplate
+        QmdTemplate -- "Processed by Quarto with data" --> FinalDoc
     end
-
-    subgraph "4. Document Rendering"
-        J["Quarto CLI"]
-        K["Final Document: HTML, PDF, DOCX, etc."]
-        I_PopulatedQMD -->|Input to| J
-        J -- Renders --> K
-    end
-
-    %% Connections between subgraphs
-    A --> G_Template
-    B --> C
-    E --> H_AIData
 ``` 
 
 # Ideation Process for Academic Research in Supply Chain
