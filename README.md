@@ -1,4 +1,4 @@
-```
+```mermaid
 graph TD
     subgraph "1. Design & Setup Phase"
         A[User: Designs Ideation Template (.qmd)] -- Defines structure & placeholders --> A
