@@ -1,55 +1,41 @@
 ```mermaid
 graph TD
-    subgraph "A. Data & Core Content Definition"
-        A1[Structured Data Input (JSON/YAML file with content)]
-        A2[Primary .qmd Template (Loads data, defines common structure & base logic)]
-        A1 -->|Is loaded & processed by| A2
+    subgraph "Input & Core Template"
+        A1["Structured Data (JSON/YAML)"]
+        A2["Primary .qmd Template"]
+        A1 --> A2
     end
 
-    subgraph "B. Quarto Rendering Process (with Conditional Logic)"
-        B1{Quarto Engine}
-        A2 --> B1
-
-        subgraph "B1.1. HTML-Specific Path"
-            B1_HTML_Cfg[HTML Format Config (from .qmd YAML front matter / _quarto.yml)]
-            B1_HTML_Cond[HTML Conditional Content/Logic (in .qmd)]
-            B1_HTML_CSS[HTML-specific CSS files]
-            
-            B1_HTML_Cfg --> B1
-            B1_HTML_Cond -- Evaluated by --> B1
-            B1_HTML_CSS -- Used by --> B1
-        end
-
-        subgraph "B1.2. PDF-Specific Path"
-            B1_PDF_Cfg[PDF Format Config (from .qmd YAML front matter / _quarto.yml, e.g., LaTeX engine, paper size)]
-            B1_PDF_Cond[PDF Conditional Content/Logic (in .qmd)]
-            B1_PDF_LaTeX[PDF-specific LaTeX preamble/includes (if using LaTeX engine)]
-            B1_PDF_CSS[PDF-specific CSS (if using HTML-to-PDF engine like WeasyPrint)]
-            
-            B1_PDF_Cfg --> B1
-            B1_PDF_Cond -- Evaluated by --> B1
-            B1_PDF_LaTeX -- Used by --> B1
-            B1_PDF_CSS -- Used by --> B1
-        end
-
-        %% Rendering Decision Point (Implicitly handled by Quarto based on '--to' flag or project config)
-        B1 -- "Render for HTML Target" --> B2_HTML_Output
-        B1 -- "Render for PDF Target" --> B2_PDF_Output
+    subgraph "Quarto Rendering Engine"
+        B1{"Quarto Engine"}
     end
 
-    subgraph "C. Outputs"
-        B2_HTML_Output[Output: Website (HTML, CSS, JS)]
-        B2_PDF_Output[Output: PDF Document]
+    A2 --> B1
+
+    subgraph "HTML Output Path"
+        C1["HTML Config (YAML)"]
+        C2["HTML Conditional Content (in .qmd)"]
+        C3["HTML CSS"]
+        
+        B1 -- "Target: HTML" --> RenderHTML
+        RenderHTML["Process for HTML"]
+        C1 --> RenderHTML
+        C2 --> RenderHTML
+        C3 --> RenderHTML
+        RenderHTML --> OutputHTML["Website (HTML)"]
     end
 
-    %% Optional: Modular Content (If used)
-    subgraph "X. Optional: Modular Content Strategy"
-        direction LR
-        X1[Shared Content Partials (.md/.qmd snippets)]
-        X2[HTML Master .qmd (Includes X1, adds HTML structure)] -->|Provides primary template for HTML Path| B1_HTML_Cond
-        X3[PDF Master .qmd (Includes X1, adds PDF structure)] -->|Provides primary template for PDF Path| B1_PDF_Cond
-        A1 -->|Data used by| X1
-        %% If this strategy is used, A2 might be X2 and X3 instead of a single primary .qmd
+    subgraph "PDF Output Path"
+        D1["PDF Config (YAML, e.g., LaTeX/Engine choice)"]
+        D2["PDF Conditional Content (in .qmd)"]
+        D3["PDF Resources (e.g., LaTeX preamble, PDF-specific CSS)"]
+
+        B1 -- "Target: PDF" --> RenderPDF
+        RenderPDF["Process for PDF"]
+        D1 --> RenderPDF
+        D2 --> RenderPDF
+        D3 --> RenderPDF
+        RenderPDF --> OutputPDF["PDF Document"]
     end
 ``` 
 
