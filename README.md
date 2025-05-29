@@ -1,24 +1,24 @@
 ```mermaid
 graph TD
     subgraph "1. Design & Setup Phase"
-        A[User: Designs Ideation Template (.qmd)] -- "Defines structure & placeholders" --> A
-        B[User: Defines AI Data Structure (JSON/YAML Schema for AI Output)] -- "Specifies expected AI content fields" --> B
+        A["User: Designs Ideation Template (.qmd)"] -- "Defines structure & placeholders" --> A
+        B["User: Defines AI Data Structure (JSON/YAML Schema for AI Output)"] -- "Specifies expected AI content fields" --> B
     end
 
     subgraph "2. AI Content Generation"
-        C[User/Script: Prompts AI Model] -- "Provides: Task, Context, Base Template (optional), and Desired Schema (B)" --> C
-        D[AI Model: Processes Prompt & Generates Content]
-        E((AI Output: Structured Data - JSON/YAML)) -- "Conforms to Schema B" --> E
+        C["User/Script: Prompts AI Model"] -- "Provides: Task, Context, Base Template (optional), and Desired Schema (B)" --> C
+        D["AI Model: Processes Prompt & Generates Content"]
+        E["AI Output: Structured Data - JSON/YAML"] -- "Conforms to Schema B" --> E
         C --> D
         D --> E
     end
 
     subgraph "3. Document Assembly & Processing"
         direction LR
-        F[Automated Script (e.g., Python)]
-        G_Template[(Base .qmd Ideation Template from A)] %% Database shape
-        H_AIData[(AI's JSON/YAML Output from E)] %% Database shape
-        I_PopulatedQMD((Populated .qmd File)) %% Circle shape for artifact
+        F["Automated Script (e.g., Python)"]
+        G_Template["Base .qmd Ideation Template from A"] %% Using simple rectangle
+        H_AIData["AI's JSON/YAML Output from E"] %% Using simple rectangle
+        I_PopulatedQMD["Populated .qmd File"] %% Using simple rectangle
 
         G_Template -->|Reads| F
         H_AIData -->|Reads| F
@@ -26,8 +26,8 @@ graph TD
     end
 
     subgraph "4. Document Rendering"
-        J[Quarto CLI]
-        K[Final Document: HTML, PDF, DOCX, etc.]
+        J["Quarto CLI"]
+        K["Final Document: HTML, PDF, DOCX, etc."]
         I_PopulatedQMD -->|Input to| J
         J -- Renders --> K
     end
