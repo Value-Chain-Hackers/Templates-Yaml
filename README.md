@@ -1,95 +1,16 @@
 ```mermaid
 graph TD
-    subgraph "1. Inputs & Initial Configuration"
-        IN_Data["Structured Data (JSON/YAML)"]
-        IN_Qmd[".qmd Template (Source File)"]
-        
-        P0_LoadProjectConfig["(If Project) Load _quarto.yml / _metadata.yml (Global Project Settings)"]
-        P1_ReadQmd["Read .qmd File Content"]
-        P2_ParseYAML["Parse YAML Front Matter (Document-specific metadata, format configs, params)"]
-        P3_ResolveParameters["Resolve Execution Parameters (CLI, YAML, Project Defaults)"]
-        
-        IN_Qmd --> P1_ReadQmd
-        P1_ReadQmd --> P2_ParseYAML
-        P0_LoadProjectConfig --> P2_ParseYAML
-        P2_ParseYAML --> P3_ResolveParameters
-    end
-
-    subgraph "2. Content Processing & Code Execution"
-        P4_PreProcessMarkdown["Markdown Pre-processing (Initial text transformations, apply some Lua filters - Pass 1)"]
-        P5_LoadDataViaCode["(If applicable via Code Chunks) Load External Data (IN_Data) using Resolved Parameters (P3)"]
-        P6_ExecuteCodeChunks["Execute Code Chunks (Knitr for R, Jupyter for Python/Julia - Generates Markdown, figures, tables, raw output based on 'eval' conditions)"]
-        
-        P3_ResolveParameters --> P4_PreProcessMarkdown
-        P4_PreProcessMarkdown --> P5_LoadDataViaCode
-        IN_Data -.-> P5_LoadDataViaCode
-        P5_LoadDataViaCode --> P6_ExecuteCodeChunks
-    end
-
-    subgraph "3. Pandoc AST Generation & Core Transformations"
-        P7_CombineContent["Combine Original Markdown & Code Chunk Outputs"]
-        P8_ParseToPandocAST["Parse Combined Content into Pandoc Abstract Syntax Tree (AST)"]
-        P9_ApplyCoreLuaFilters["Apply Quarto's Core Lua Filters to AST (Cross-references, Citations, Callouts, Tabsets, Layouts, Conditional Content based on target format, etc.)"]
-        
-        P6_ExecuteCodeChunks --> P7_CombineContent
-        P7_CombineContent --> P8_ParseToPandocAST
-        P8_ParseToPandocAST --> P9_ApplyCoreLuaFilters
-    end
-
-    ProcessedAST["Processed & Transformed Pandoc AST (Ready for Output Formatters)"]
-    P9_ApplyCoreLuaFilters --> ProcessedAST
-
-    subgraph "4A. HTML-Specific Output Generation"
-        HTML_StartPoint{"Target Format: HTML"}
-        ProcessedAST --> HTML_StartPoint
-
-        H1_ApplyHTMLConfig["Apply HTML-Specific Configurations (from YAML: theme, toc, css, js, etc.)"]
-        H2_RunHTMLFilters["Run HTML-Specific Lua Filters (if any)"]
-        H3_PandocToHTML["Pandoc AST to HTML Conversion (Using HTML templates, integrating assets)"]
-        H4_ProcessHTMLAssets["Collect & Process HTML Assets (CSS, JS, Images, Fonts)"]
-        H5_FinalHTMLOutput["Final HTML Document(s) / Website"]
-
-        HTML_StartPoint --> H1_ApplyHTMLConfig
-        H1_ApplyHTMLConfig --> H2_RunHTMLFilters
-        H2_RunHTMLFilters --> H3_PandocToHTML
-        H3_PandocToHTML --> H4_ProcessHTMLAssets
-        H4_ProcessHTMLAssets --> H5_FinalHTMLOutput
-    end
-
-    subgraph "4B. PDF-Specific Output Generation (via LaTeX Engine - Common Path)"
-        PDF_LaTeX_StartPoint{"Target Format: PDF (Using LaTeX Engine)"}
-        ProcessedAST --> PDF_LaTeX_StartPoint
-
-        PL1_ApplyPDFLaTeXConfig["Apply PDF/LaTeX-Specific Configurations (from YAML: documentclass, papersize, fonts, LaTeX packages, include-in-header, etc.)"]
-        PL2_RunLaTeXFilters["Run LaTeX-Specific Lua Filters (if any)"]
-        PL3_PandocToLaTeX["Pandoc AST to LaTeX Conversion (Using LaTeX templates)"]
-        PL4_CompileLaTeX["LaTeX Compilation (pdflatex, xelatex, or lualatex; multiple passes for references, ToC)"]
-        PL5_FinalPDFOutput_L["Final PDF Document"]
-
-        PDF_LaTeX_StartPoint --> PL1_ApplyPDFLaTeXConfig
-        PL1_ApplyPDFLaTeXConfig --> PL2_RunLaTeXFilters
-        PL2_RunLaTeXFilters --> PL3_PandocToLaTeX
-        PL3_PandocToLaTeX --> PL4_CompileLaTeX
-        PL4_CompileLaTeX --> PL5_FinalPDFOutput_L
-    end
-
-    subgraph "4C. PDF-Specific Output Generation (via HTML-based Engine - e.g., WeasyPrint)"
-        PDF_HTML_StartPoint{"Target Format: PDF (Using HTML-based Engine)"}
-        ProcessedAST --> PDF_HTML_StartPoint
-
-        PH1_ApplyPDFHTMLConfig["Apply PDF/HTML-Engine-Specific Configurations (from YAML: engine choice, CSS for paged media)"]
-        PH2_GenerateIntermediateHTML["Generate Intermediate HTML (Similar to HTML path but optimized for paged media, applying specific CSS)"]
-        PH3_ConvertHTMLToPDF["Convert Intermediate HTML to PDF (Using WeasyPrint, PagedJS, etc.)"]
-        PH4_FinalPDFOutput_H["Final PDF Document"]
-        
-        H1_ApplyHTMLConfig -.-> PH2_GenerateIntermediateHTML
-        H3_PandocToHTML -.-> PH2_GenerateIntermediateHTML
-
-        PDF_HTML_StartPoint --> PH1_ApplyPDFHTMLConfig
-        PH1_ApplyPDFHTMLConfig --> PH2_GenerateIntermediateHTML
-        PH2_GenerateIntermediateHTML --> PH3_ConvertHTMLToPDF
-        PH3_ConvertHTMLToPDF --> PH4_FinalPDFOutput_H
-    end
+    A["Data Source (e.g., JSON, YAML, .qmd files with data, Databases)"] --> B{"Quarto Engine / Processing"};
+    
+    B --> C["Quarto HTML (Websites, Single Pages)"];
+    B --> D["Quarto PDF (Documents, Reports)"];
+    B --> E["Quarto Interactive Documents (Shiny, Observable JS)"];
+    B --> F["Quarto Dashboards"];
+    B --> G["Quarto Articles (Academic, Technical)"];
+    B --> H["Quarto Blog (Posts, Listings)"];
+    B --> I["Quarto Presentations"];
+    B --> J["Quarto Books"];
+    B --> K["Quarto E-books (e.g., ePub)"];
 ``` 
 
 # Ideation Process for Academic Research in Supply Chain
