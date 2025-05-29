@@ -1,14 +1,14 @@
 ```mermaid
 graph TD
     subgraph "1. Design & Setup Phase"
-        A[User: Designs Ideation Template (.qmd)] -- Defines structure & placeholders --> A
-        B[User: Defines AI Data Structure (JSON/YAML Schema for AI Output)] -- Specifies expected AI content fields --> B
+        A[User: Designs Ideation Template .qmd] -- Defines structure & placeholders --> A
+        B[User: Defines AI Data Structure JSON/YAML Schema for AI Output] -- Specifies expected AI content fields --> B
     end
 
     subgraph "2. AI Content Generation"
-        C[User/Script: Prompts AI Model] -- Provides: Task, Context, Base Template (optional), and Desired Schema (B) --> C
-        D(AI Model: Processes Prompt & Generates Content)
-        E((AI Output: Structured Data - JSON/YAML)) -- Conforms to Schema B --> E
+        C[User/Script: Prompts AI Model] -- Provides: Task, Context, Base Template , and Desired Schema (B) --> C
+        DAI Model: Processes Prompt & Generates Content
+        EAI Output: Structured Data - JSON/YAML -- Conforms to Schema B --> E
         C --> D
         D --> E
     end
