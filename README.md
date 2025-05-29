@@ -1,41 +1,55 @@
 ```mermaid
 graph TD
-    subgraph "Phase 1: Template System Creation (by 'You' - System Architect)"
-        Architect["You (System Architect)"]
-
-        Architect -- "Defines content structure" --> DataSchema["Data_Schema (JSON/YAML Structure Definition for a Document Type)"]
-        Architect -- "Designs layout & data integration" --> QmdTemplate["Presentation_Template (.qmd file mapped to Data_Schema)"]
-        
-        DataSchema --> TemplatePackage["Template Package (for one Document Type)"]
-        QmdTemplate --> TemplatePackage
+    subgraph "A. Data & Core Content Definition"
+        A1[Structured Data Input (JSON/YAML file with content)]
+        A2[Primary .qmd Template (Loads data, defines common structure & base logic)]
+        A1 -->|Is loaded & processed by| A2
     end
 
-    subgraph "Phase 2: Document Creation (by End-User)"
-        EndUser["End-User (Student, Researcher, etc.)"]
-        
-        TemplatePackage -- "Provides guidelines" --> CreateDataInstance["End-User Creates Data_Instance (JSON/YAML file conforming to Data_Schema)"]
-        EndUser --> CreateDataInstance
-        
-        DataInstance["Data_Instance (User's Content File)"]
-        CreateDataInstance --> DataInstance
+    subgraph "B. Quarto Rendering Process (with Conditional Logic)"
+        B1{Quarto Engine}
+        A2 --> B1
+
+        subgraph "B1.1. HTML-Specific Path"
+            B1_HTML_Cfg[HTML Format Config (from .qmd YAML front matter / _quarto.yml)]
+            B1_HTML_Cond[HTML Conditional Content/Logic (in .qmd)]
+            B1_HTML_CSS[HTML-specific CSS files]
+            
+            B1_HTML_Cfg --> B1
+            B1_HTML_Cond -- Evaluated by --> B1
+            B1_HTML_CSS -- Used by --> B1
+        end
+
+        subgraph "B1.2. PDF-Specific Path"
+            B1_PDF_Cfg[PDF Format Config (from .qmd YAML front matter / _quarto.yml, e.g., LaTeX engine, paper size)]
+            B1_PDF_Cond[PDF Conditional Content/Logic (in .qmd)]
+            B1_PDF_LaTeX[PDF-specific LaTeX preamble/includes (if using LaTeX engine)]
+            B1_PDF_CSS[PDF-specific CSS (if using HTML-to-PDF engine like WeasyPrint)]
+            
+            B1_PDF_Cfg --> B1
+            B1_PDF_Cond -- Evaluated by --> B1
+            B1_PDF_LaTeX -- Used by --> B1
+            B1_PDF_CSS -- Used by --> B1
+        end
+
+        %% Rendering Decision Point (Implicitly handled by Quarto based on '--to' flag or project config)
+        B1 -- "Render for HTML Target" --> B2_HTML_Output
+        B1 -- "Render for PDF Target" --> B2_PDF_Output
     end
 
-    subgraph "Phase 3: Document Generation (by End-User using Quarto)"
-        QuartoEngine["Quarto Rendering Engine"]
-        
-        RenderProcess["End-User Initiates Quarto Render"]
-        EndUser --> RenderProcess
+    subgraph "C. Outputs"
+        B2_HTML_Output[Output: Website (HTML, CSS, JS)]
+        B2_PDF_Output[Output: PDF Document]
+    end
 
-        TemplatePackage -- "Provides .qmd" --> QmdToRender["Specific .qmd from Template Package"]
-        DataInstance -- "Provides data" --> DataToRender["Specific Data_Instance"]
-        
-        RenderProcess -.-> QmdToRender
-        RenderProcess -.-> DataToRender
-
-        QmdToRender -->|Input to| QuartoEngine
-        DataToRender -->|Input to| QuartoEngine
-        
-        QuartoEngine --> FinalDocument["Final Rendered Document (HTML, PDF, Website, etc.)"]
+    %% Optional: Modular Content (If used)
+    subgraph "X. Optional: Modular Content Strategy"
+        direction LR
+        X1[Shared Content Partials (.md/.qmd snippets)]
+        X2[HTML Master .qmd (Includes X1, adds HTML structure)] -->|Provides primary template for HTML Path| B1_HTML_Cond
+        X3[PDF Master .qmd (Includes X1, adds PDF structure)] -->|Provides primary template for PDF Path| B1_PDF_Cond
+        A1 -->|Data used by| X1
+        %% If this strategy is used, A2 might be X2 and X3 instead of a single primary .qmd
     end
 ``` 
 
