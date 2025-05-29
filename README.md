@@ -1,14 +1,14 @@
 ```mermaid
 graph TD
     subgraph "1. Design & Setup Phase"
-        A[User: Designs Ideation Template (.qmd)] -- Defines structure & placeholders --> A
-        B[User: Defines AI Data Structure (JSON/YAML Schema for AI Output)] -- Specifies expected AI content fields --> B
+        A[User: Designs Ideation Template (.qmd)] -- "Defines structure & placeholders" --> A
+        B[User: Defines AI Data Structure (JSON/YAML Schema for AI Output)] -- "Specifies expected AI content fields" --> B
     end
 
     subgraph "2. AI Content Generation"
-        C[User/Script: Prompts AI Model] -- Provides: Task, Context, Base Template (optional), and Desired Schema (B) --> C
-        D[AI Model: Processes Prompt & Generates Content] %% Changed from D() to D[]
-        E((AI Output: Structured Data - JSON/YAML)) -- Conforms to Schema B --> E
+        C[User/Script: Prompts AI Model] -- "Provides: Task, Context, Base Template (optional), and Desired Schema (B)" --> C
+        D[AI Model: Processes Prompt & Generates Content]
+        E((AI Output: Structured Data - JSON/YAML)) -- "Conforms to Schema B" --> E
         C --> D
         D --> E
     end
@@ -22,12 +22,12 @@ graph TD
 
         G_Template -->|Reads| F
         H_AIData -->|Reads| F
-        F -- Injects AI data into a copy of Base Template --> I_PopulatedQMD
+        F -- "Injects AI data into a copy of Base Template" --> I_PopulatedQMD
     end
 
     subgraph "4. Document Rendering"
         J[Quarto CLI]
-        K[Final Document: HTML, PDF, DOCX, etc.] %% Changed from K([]) to K[]
+        K[Final Document: HTML, PDF, DOCX, etc.]
         I_PopulatedQMD -->|Input to| J
         J -- Renders --> K
     end
