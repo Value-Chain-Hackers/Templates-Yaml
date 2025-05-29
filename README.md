@@ -1,14 +1,14 @@
 ```mermaid
 graph TD
     subgraph "1. Design & Setup Phase"
-        A[User: Designs Ideation Template .qmd] -- Defines structure & placeholders --> A
-        B[User: Defines AI Data Structure JSON/YAML Schema for AI Output] -- Specifies expected AI content fields --> B
+        A[User: Designs Ideation Template (.qmd)] -- Defines structure & placeholders --> A
+        B[User: Defines AI Data Structure (JSON/YAML Schema for AI Output)] -- Specifies expected AI content fields --> B
     end
 
     subgraph "2. AI Content Generation"
-        C[User/Script: Prompts AI Model] -- Provides: Task, Context, Base Template , and Desired Schema (B) --> C
-        DAI Model: Processes Prompt & Generates Content
-        EAI Output: Structured Data - JSON/YAML -- Conforms to Schema B --> E
+        C[User/Script: Prompts AI Model] -- Provides: Task, Context, Base Template (optional), and Desired Schema (B) --> C
+        D[AI Model: Processes Prompt & Generates Content] %% Changed from D() to D[]
+        E((AI Output: Structured Data - JSON/YAML)) -- Conforms to Schema B --> E
         C --> D
         D --> E
     end
@@ -16,9 +16,9 @@ graph TD
     subgraph "3. Document Assembly & Processing"
         direction LR
         F[Automated Script (e.g., Python)]
-        G_Template[(Base .qmd Ideation Template from A)]
-        H_AIData[(AI's JSON/YAML Output from E)]
-        I_PopulatedQMD((Populated .qmd File))
+        G_Template[(Base .qmd Ideation Template from A)] %% Database shape
+        H_AIData[(AI's JSON/YAML Output from E)] %% Database shape
+        I_PopulatedQMD((Populated .qmd File)) %% Circle shape for artifact
 
         G_Template -->|Reads| F
         H_AIData -->|Reads| F
@@ -27,7 +27,7 @@ graph TD
 
     subgraph "4. Document Rendering"
         J[Quarto CLI]
-        K([Final Document: HTML, PDF, DOCX, etc.])
+        K[Final Document: HTML, PDF, DOCX, etc.] %% Changed from K([]) to K[]
         I_PopulatedQMD -->|Input to| J
         J -- Renders --> K
     end
@@ -36,7 +36,7 @@ graph TD
     A --> G_Template
     B --> C
     E --> H_AIData
-    ``` 
+``` 
 
 # Ideation Process for Academic Research in Supply Chain
 
