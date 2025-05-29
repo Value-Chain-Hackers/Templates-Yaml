@@ -16,9 +16,9 @@ graph TD
     subgraph "3. Document Assembly & Processing"
         direction LR
         F["Automated Script (e.g., Python)"]
-        G_Template["Base .qmd Ideation Template from A"] %% Using simple rectangle
-        H_AIData["AI's JSON/YAML Output from E"] %% Using simple rectangle
-        I_PopulatedQMD["Populated .qmd File"] %% Using simple rectangle
+        G_Template["Base .qmd Ideation Template from A"]
+        H_AIData["AI's JSON/YAML Output from E"]
+        I_PopulatedQMD["Populated .qmd File"]
 
         G_Template -->|Reads| F
         H_AIData -->|Reads| F
