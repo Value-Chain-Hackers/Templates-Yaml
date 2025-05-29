@@ -1,41 +1,54 @@
 ```mermaid
 graph TD
-    subgraph "Input & Core Template"
+    subgraph "1. Inputs"
         A1["Structured Data (JSON/YAML)"]
-        A2["Primary .qmd Template"]
-        A1 --> A2
+        A2["Primary .qmd Template (Markdown, YAML Front Matter, Code Chunks)"]
     end
 
-    subgraph "Quarto Rendering Engine"
-        B1{"Quarto Engine"}
-    end
-
-    A2 --> B1
-
-    subgraph "HTML Output Path"
-        C1["HTML Config (YAML)"]
-        C2["HTML Conditional Content (in .qmd)"]
-        C3["HTML CSS"]
+    subgraph "2. Quarto Core Processing (Common Initial Stages)"
+        B1["Parse .qmd File (Incl. YAML Front Matter)"]
+        B2["Inject/Load Structured Data (A1) into .qmd Context"]
+        B3["Execute Code Chunks (Data processing, dynamic content generation)"]
+        B4["Evaluate Conditional Content Logic (e.g., 'when-format', code chunk 'eval')"]
         
-        B1 -- "Target: HTML" --> RenderHTML
-        RenderHTML["Process for HTML"]
-        C1 --> RenderHTML
-        C2 --> RenderHTML
-        C3 --> RenderHTML
-        RenderHTML --> OutputHTML["Website (HTML)"]
+        A2 --> B1
+        A1 --> B2
+        B1 --> B2
+        B2 --> B3
+        B3 --> B4
     end
 
-    subgraph "PDF Output Path"
-        D1["PDF Config (YAML, e.g., LaTeX/Engine choice)"]
-        D2["PDF Conditional Content (in .qmd)"]
-        D3["PDF Resources (e.g., LaTeX preamble, PDF-specific CSS)"]
+    ProcessedContent["Processed Content (Ready for Format-Specific Rendering)"]
+    B4 --> ProcessedContent
 
-        B1 -- "Target: PDF" --> RenderPDF
-        RenderPDF["Process for PDF"]
-        D1 --> RenderPDF
-        D2 --> RenderPDF
-        D3 --> RenderPDF
-        RenderPDF --> OutputPDF["PDF Document"]
+    subgraph "3A. HTML-Specific Rendering Path"
+        HTML_Path_Start{"Target: HTML"}
+        ProcessedContent --> HTML_Path_Start
+
+        H_Cfg["Apply HTML-Specific Config (from YAML Front Matter: theme, toc, css links, etc.)"]
+        H_Style["Apply HTML Styling (Linked CSS, inline styles)"]
+        H_Convert["Convert to HTML (Pandoc + HTML Templates/Engine)"]
+        H_Output["Website/HTML Document"]
+
+        HTML_Path_Start --> H_Cfg
+        H_Cfg --> H_Style
+        H_Style --> H_Convert
+        H_Convert --> H_Output
+    end
+
+    subgraph "3B. PDF-Specific Rendering Path"
+        PDF_Path_Start{"Target: PDF"}
+        ProcessedContent --> PDF_Path_Start
+
+        P_Cfg["Apply PDF-Specific Config (from YAML Front Matter: documentclass, papersize, PDF engine, etc.)"]
+        P_Style["Apply PDF Styling & Resources (LaTeX preamble, PDF-specific CSS if HTML-based engine)"]
+        P_Convert["Convert to PDF (Pandoc + Selected PDF Engine - e.g., LaTeX, WeasyPrint)"]
+        P_Output["PDF Document"]
+
+        PDF_Path_Start --> P_Cfg
+        P_Cfg --> P_Style
+        P_Style --> P_Convert
+        P_Convert --> P_Output
     end
 ``` 
 
