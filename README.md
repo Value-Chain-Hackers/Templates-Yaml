@@ -11,7 +11,7 @@ graph TD
         
         IN_Qmd --> P1_ReadQmd
         P1_ReadQmd --> P2_ParseYAML
-        P0_LoadProjectConfig --> P2_ParseYAML %% Project settings can influence/be overridden by document YAML
+        P0_LoadProjectConfig --> P2_ParseYAML
         P2_ParseYAML --> P3_ResolveParameters
     end
 
@@ -22,7 +22,7 @@ graph TD
         
         P3_ResolveParameters --> P4_PreProcessMarkdown
         P4_PreProcessMarkdown --> P5_LoadDataViaCode
-        IN_Data -.-> P5_LoadDataViaCode %% Data file is an input to this step
+        IN_Data -.-> P5_LoadDataViaCode
         P5_LoadDataViaCode --> P6_ExecuteCodeChunks
     end
 
@@ -82,9 +82,8 @@ graph TD
         PH3_ConvertHTMLToPDF["Convert Intermediate HTML to PDF (Using WeasyPrint, PagedJS, etc.)"]
         PH4_FinalPDFOutput_H["Final PDF Document"]
         
-        %% This path reuses or parallels some HTML generation steps
-        H1_ApplyHTMLConfig -.-> PH2_GenerateIntermediateHTML %% Shares some config/templating ideas
-        H3_PandocToHTML -.-> PH2_GenerateIntermediateHTML %% Base conversion to HTML is similar
+        H1_ApplyHTMLConfig -.-> PH2_GenerateIntermediateHTML
+        H3_PandocToHTML -.-> PH2_GenerateIntermediateHTML
 
         PDF_HTML_StartPoint --> PH1_ApplyPDFHTMLConfig
         PH1_ApplyPDFHTMLConfig --> PH2_GenerateIntermediateHTML
